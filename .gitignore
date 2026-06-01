@@ -1,0 +1,22 @@
+# Secrets
+.env
+
+# OS
+.DS_Store
+
+# Model weights
+unsloth/
+
+# Python
+__pycache__/
+*.pyc
+
+# Large binary output files
+output/*.npy
+output/*.npz
+output/*.parquet
+
+# JSON output files
+output/*.json
+
+# PNG kept (small, useful for reference)
