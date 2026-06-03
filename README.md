@@ -2,25 +2,29 @@
 
 **Can a small model on a laptop do the work of a cloud model, for a fraction of the cost?**
 
-Support tickets are repetitive. So: group 61,765 real tickets into common patterns, write a step by step guide for each, and have a small local model follow them.
+Support tickets are repetitive. Can we group customer tickets into common patterns, write a blueprint/instruction for each pattern, and then have a small local LLM follow them?
 
 Then test it fairly against a cloud model, same instructions for both, graded blind.
 
-The local model lost: 46% of its answers were good enough to send, vs 96% for the cloud model.
+We found 46% of the local model's answers to be good enough to send, vs 96% for the cloud model.
 
-But the reason is fixable. It mostly failed at *formatting* its answer, not at *solving* the problem. When its answer came out clean, it was often the better one.
-
-`Python` · `sentence-transformers` · `HDBSCAN` · `UMAP` · `llama.cpp` · `Gemini API` · `pytest`
+Most of the failures from the local model were related to JSON formatting issues. But when it did answer correctly, the answers were clean and filled with proper details.
 
 ---
 
-## Why it's worth a look
+## Local LLM Model
 
-The design is the point, not the model:
+unsloth/gemma-4-E4B-it-GGUF
+
+llama-server -hf unsloth/gemma-4-E4B-it-GGUF:Q8_0 --no-mmproj --temp 1.0 --top-p 0.95 --top-k 64 --port 8080
+
+https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF
+
+## Project description
 
 * Both models got the exact same instructions, so the test measures the model, not a head start.
-* A separate model graded the answers without being told which model wrote which.
-* 20 of those grades were checked by hand and agreed 87.5% of the time, so the grading can be trusted.
+* A separate model (judge) graded the answers without being told which model wrote which.
+* 20 of those grades were checked by a human and agreed 87.5% of the time, so the grading can be trusted.
 * The result came out negative, and it is reported that way instead of hidden.
 
 ---
@@ -46,11 +50,11 @@ The design is the point, not the model:
 
 | | Local (Gemma 4B) | Cloud (Gemini Flash) |
 |--|------------------|----------------------|
-| Answer good enough to send | 46.4% | 96.4% |
+| Answer good enough  | 46.4% | 96.4% |
 | Answer in the required format | 49.1% | 100% |
 | Graded the better answer | 37 | 73 |
 
-By group:
+Answers break down by group:
 
 | Group | Topic | Local | Cloud |
 |---------|--------|-------|-------|
@@ -70,13 +74,13 @@ On the hand check: the human and the grader agreed on "good enough to send" 95% 
 
 ## Cost
 
-This run cost about $2 in API calls. That small number is the point.
+This run cost about $2 in API calls.
 
 The cost only matters at volume. One full pass over all 61,765 tickets would cost a few thousand dollars on the cloud model, and a real support team runs this every day. The local model costs about $0 per call after the hardware. The question is whether its answers are good enough to make that trade, and a raw 4B model is not there yet.
 
 Speed and hardware, for context:
 
-| | Local (Gemma 4B) | Cloud (Gemini Flash) |
+| | Local (Gemma 4B) | Cloud (Gemini 2.5 Flash) |
 |--|------------------|----------------------|
 | Cost per call | ~$0 | paid per token |
 | Time per call | 89 sec | 10 sec |
