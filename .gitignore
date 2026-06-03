@@ -10,13 +10,16 @@ unsloth/
 # Python
 __pycache__/
 *.pyc
+.pytest_cache/
 
-# Large binary output files
+# Output: large binary files
 output/*.npy
 output/*.npz
 output/*.parquet
 
-# JSON output files
+# Output: experiment data
 output/*.json
+output/*.jsonl
+output/*.csv
 
-# PNG kept (small, useful for reference)
+# Output: PNGs kept (small, useful for README)
